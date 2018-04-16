@@ -3,7 +3,7 @@ class ItemsController < ProtectedController
 
   # GET /items
   def index
-    @items = Item.all
+    @items = current_user.items.all
 
     render json: @items
   end
@@ -15,10 +15,10 @@ class ItemsController < ProtectedController
 
   # POST /items
   def create
-    @item = Item.new(item_params)
+    @item = current_user.items.build(item_params)
 
     if @item.save
-      render json: @item, status: :created, location: @item
+      render json: @item, status: :created
     else
       render json: @item.errors, status: :unprocessable_entity
     end
@@ -41,7 +41,7 @@ class ItemsController < ProtectedController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_item
-      @item = Item.find(params[:id])
+      @item = current_user.items.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
